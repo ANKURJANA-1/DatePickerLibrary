@@ -8,21 +8,21 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.datepicker.R
+import com.example.datepicker.date_picker.model.AllMonths
 import com.example.datepicker.date_picker.model.Day
 import com.example.datepicker.date_picker.model.Months
 
 class MonthAdapter(
     val context: Context,
-    val daysList: ArrayList<Day>
+    private val monthsList: ArrayList<AllMonths>,
+    val dayAndMonthSelector: (dateIndex: Int) -> Unit
 ) : RecyclerView.Adapter<MonthAdapter.MonthViewHolder>() {
-
 
     inner class MonthViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val day: RecyclerView = itemView.findViewById(R.id.weekOfTheDay)
         private val date: RecyclerView = itemView.findViewById(R.id.monthOfTheDay)
 
-        fun bind() {
-
+        fun bind(month: AllMonths) {
             val days: ArrayList<Day> = ArrayList()
             days.add(Day("S"))
             days.add(Day("M"))
@@ -36,10 +36,45 @@ class MonthAdapter(
             day.adapter = weekAdapter
             day.layoutManager = GridLayoutManager(context, 7)
 
-            val daysAdapter: DaysAdapter = DaysAdapter(context,daysList)
-            date.adapter=daysAdapter
-            date.layoutManager=GridLayoutManager(context,7)
+
+            val list: ArrayList<Day> = ArrayList()
+            when (month.startingDayOfWeek) {
+                2 -> {
+                    list.add(Day(""))
+                }
+                3 -> {
+                    list.add(Day(""))
+                    list.add(Day(""))
+                }
+                4 -> {
+                    list.add(Day(""))
+                    list.add(Day(""))
+                    list.add(Day(""))
+                }
+                5 -> {
+                    list.add(Day(""))
+                    list.add(Day(""))
+                    list.add(Day(""))
+                    list.add(Day(""))
+                }
+                6 -> {
+                    list.add(Day(""))
+                    list.add(Day(""))
+                    list.add(Day(""))
+                    list.add(Day(""))
+                    list.add(Day(""))
+                }
+            }
+            dayAndMonthSelector(month.startingDayOfWeek)
+            for (i in 1..month.dayCountOfMonth) {
+                list.add(Day(i.toString(), month.year, month.months))
+            }
+
+            val daysAdapter: DaysAdapter = DaysAdapter(context, dates = list)
+            date.adapter = daysAdapter
+            date.layoutManager = GridLayoutManager(context, 7)
             date.hasFixedSize()
+
 
         }
     }
@@ -51,10 +86,10 @@ class MonthAdapter(
     }
 
     override fun onBindViewHolder(holder: MonthViewHolder, position: Int) {
-        holder.bind()
+        holder.bind(monthsList.get(position))
     }
 
     override fun getItemCount(): Int {
-        return 10
+        return monthsList.size
     }
 }

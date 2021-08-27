@@ -4,20 +4,45 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.datepicker.R
+import com.example.datepicker.date_picker.model.AllMonths
 import com.example.datepicker.date_picker.model.Day
 
 class DaysAdapter(
     val context: Context,
+    val dayAndMonthSelector: ((year: Int, month: Int, day: String) -> Unit)? = null,
     private val dates: ArrayList<Day>
 ) : RecyclerView.Adapter<DaysAdapter.DaysViewHolder>() {
     inner class DaysViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val day: AppCompatTextView = itemView.findViewById(R.id.days)
+        private val date_: AppCompatTextView = itemView.findViewById(R.id.days)
 
         fun bind(date: Day) {
-            day.text = date.day.toString()
+            date_.text = date.day
+
+            date_.setOnClickListener(View.OnClickListener {
+
+                date.month?.let { it1 ->
+                    date.year?.let { it2 ->
+                        dayAndMonthSelector?.let {
+                            it(
+                                it2,
+                                it1,
+                                date.day
+                            )
+                        }
+
+                    }
+                }
+                Toast.makeText(
+                    context,
+                    date.day + "/" + date.month?.plus(1).toString() + "/" + date.year.toString(),
+                    Toast.LENGTH_LONG
+                )
+                    .show()
+            })
         }
     }
 

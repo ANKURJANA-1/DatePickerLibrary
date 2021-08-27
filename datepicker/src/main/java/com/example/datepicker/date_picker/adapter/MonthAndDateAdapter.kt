@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.datepicker.R
 
 class MonthAndDateAdapter(
-    context: Context
+    context: Context,
+    val monthSelector: (month: Int) -> Unit
 ) : RecyclerView.Adapter<MonthAndDateAdapter.MonthAndDateViewHolder>() {
     private var listOfMonth: ArrayList<String> = ArrayList()
 
@@ -35,6 +36,9 @@ class MonthAndDateAdapter(
 
         fun bind(months: String) {
             month.text = months.toString()
+            month.setOnClickListener(View.OnClickListener {
+                monthSelector(listOfMonth.indexOf(months))
+            })
         }
     }
 
