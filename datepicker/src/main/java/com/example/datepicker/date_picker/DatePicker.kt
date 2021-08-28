@@ -1,5 +1,6 @@
 package com.example.datepicker.date_picker
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.util.Log
@@ -14,7 +15,6 @@ import com.example.datepicker.date_picker.adapter.MonthAdapter
 import com.example.datepicker.date_picker.adapter.MonthAndDateAdapter
 import com.example.datepicker.date_picker.adapter.YearAdapter
 import com.example.datepicker.date_picker.model.AllMonths
-import com.example.datepicker.date_picker.model.AllYears
 import com.example.datepicker.date_picker.model.YearData
 import java.util.*
 import kotlin.collections.ArrayList
@@ -59,12 +59,14 @@ class DatePicker(
 
             }
         }.show()
+        junk()
         setInitialDateMonthAndYear()
         showYear(yearList)
         showDates()
         showMonths()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setInitialDateMonthAndYear() {
 
         val calenderNew = Calendar.getInstance()
@@ -100,16 +102,16 @@ class DatePicker(
     }
 
     private fun junk() {
-        binding.cancelButton.setOnClickListener(View.OnClickListener {
+        binding.cancelButton.setOnClickListener {
             dialog.cancel()
-        })
-        binding.okButton.setOnClickListener(View.OnClickListener {
+        }
+        binding.okButton.setOnClickListener {
             dialog.dismiss()
-        })
+        }
     }
 
     private fun daySelector(dayIndex: Int): String {
-        var day: String = ""
+        var day = ""
         when (dayIndex) {
             1 -> day = "Sun"
             2 -> day = "Mon"
@@ -124,7 +126,7 @@ class DatePicker(
     }
 
     private fun monthSelector(monthIndex: Int): String {
-        var month: String = ""
+        var month = ""
         when (monthIndex) {
             0 -> month = "Jan"
             1 -> month = "Feb"
@@ -143,7 +145,7 @@ class DatePicker(
     }
 
     private fun showYear(yearList: ArrayList<YearData>) {
-        binding.year.setOnClickListener(View.OnClickListener {
+        binding.year.setOnClickListener {
             binding.two.visibility = View.GONE
             setInitialDateMonthAndYear()
             yearAdapter = YearAdapter(
@@ -163,7 +165,7 @@ class DatePicker(
             binding.yearGrid.adapter = yearAdapter
             binding.yearGrid.hasFixedSize()
             binding.yearGrid.smoothScrollBy(0, 100)
-        })
+        }
     }
 
     private fun showDates() {
@@ -180,18 +182,18 @@ class DatePicker(
         PagerSnapHelper().attachToRecyclerView(binding.monthGrid)
         binding.monthGrid.hasFixedSize()
 
-        binding.nextMonth.setOnClickListener(View.OnClickListener {
+        binding.nextMonth.setOnClickListener {
 
-        })
+        }
 
-        binding.previousMonth.setOnClickListener(View.OnClickListener {
+        binding.previousMonth.setOnClickListener {
 
-        })
+        }
 
     }
 
     private fun showMonths() {
-        binding.currentDate.setOnClickListener(View.OnClickListener {
+        binding.currentDate.setOnClickListener {
             binding.two.visibility = View.GONE
             binding.yearGrid.visibility = View.VISIBLE
             binding.monthGrid.visibility = View.GONE
@@ -209,7 +211,7 @@ class DatePicker(
                 LinearLayoutManager(context)
             binding.yearGrid.adapter = monthsAdapter
             binding.yearGrid.hasFixedSize()
-        })
+        }
     }
 
     private fun prepareYearsAndMonth(from: Int, to: Int) {
